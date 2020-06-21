@@ -1,14 +1,16 @@
+'use strict'
+
 const svgCaptcha = require('svg-captcha')
 const Controller = require('egg').Controller
 
 class UtilController extends Controller {
-  async captcha(){
+  async captcha() {
     const captcha = svgCaptcha.create({
       size: 4,
       width: 100,
       fontSize: 50,
       height: 40,
-      noise: 3
+      noise: 3,
     })
 
     this.ctx.session.captcha = captcha.text

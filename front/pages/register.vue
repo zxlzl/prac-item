@@ -50,11 +50,22 @@ import md5 from 'md5'
             let obj = {
               email: this.form.email,
               nickname: this.form.nickname,
-              passwd: this.form.passwd,
+              passwd: md5(this.form.passwd),
               captcha: this.form.captcha,
+            }
+            let ret = await this.$http.post('/user/register',obj)
+            // code=0成功
+            if(ret.code==0){
+              this.$alert('注册成功','成功',{
+                confirmButtonText: "去登陆",
+                callback:()=>{
+                  this.$router.push('/login')
+                }
+              })
             }
           } else {
             console.log('校验失败');
+            this.$message.error(ret.message)
           }
         })
       },
