@@ -14,6 +14,11 @@
         </span>
         <el-input placeholder="密码"></el-input>
       </el-form-item>
+
+      <el-form-item props="captcha">
+        <el-input placeholder="验证码"></el-input>
+        <img @click="updateCaptcha" :src="captchaUrl" alt="">
+      </el-form-item>
     </el-form>
   </div>
 </template>
@@ -23,8 +28,17 @@ export default {
   layout: "login",
   data() {
     return {
-      rules: []
+      rules: [],
+      captchaUrl: ''
     }
+  },
+  methods: {
+    updateCaptcha() {
+      this.captchaUrl = '/api/captcha?_t='+new Date().getTime()
+    }
+  },
+  mounted () {
+    this.updateCaptcha();
   },
 };
 </script>
