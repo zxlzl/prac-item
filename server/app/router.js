@@ -9,4 +9,8 @@ module.exports = app => {
 
   // 验证码
   router.get('/captcha', controller.util.captcha)
+
+  // /user/register
+  // /user/login
+  // /user/follow
 }
