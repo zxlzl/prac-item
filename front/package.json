@@ -12,10 +12,13 @@
     "test": "jest"
   },
   "dependencies": {
-    "nuxt": "^2.0.0",
     "cross-env": "^5.2.0",
+    "element-ui": "^2.4.11",
     "koa": "^2.6.2",
-    "element-ui": "^2.4.11"
+    "nuxt": "^2.0.0",
+    "stylus": "^0.54.7",
+    "stylus-loader": "^3.0.2",
+    "svg-captcha": "^1.4.0"
   },
   "devDependencies": {
     "nodemon": "^1.18.9",
