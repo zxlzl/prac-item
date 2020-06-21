@@ -6,28 +6,28 @@
       <img src="/logo.png" alt="">
     </div> -->
 
-    <el-form-item pros="email" label="邮箱">
+    <el-form-item prop="email" label="邮箱">
       <el-input v-model="form.email" placeholder="请输入邮箱"></el-input>
     </el-form-item>
 
-    <el-form-item pros="captcha" label="验证码" class="captcha-container">
+    <el-form-item prop="captcha" label="验证码" class="captcha-container">
       <div class="captcha"><img :src="code.captcha" @click="resetCaptcha" alt=""></div>
       <el-input v-model="form.captcha" placeholder="请输入验证码"></el-input>
     </el-form-item>
 
-    <el-form-item pros="nickname" label="昵称">
+    <el-form-item prop="nickname" label="昵称">
       <el-input v-model="form.nickname" placeholder="请输入昵称"></el-input>
     </el-form-item>
 
-    <el-form-item pros="passwd" label="密码吗">
-      <el-input v-model="form.passwd" placeholder="请输入密码"></el-input>
+    <el-form-item prop="passwd" label="密码">
+      <el-input v-model="form.passwd" type="password" placeholder="请输入密码"></el-input>
     </el-form-item>
 
-    <el-form-item pros="repasswd" label="确认密码">
-      <el-input v-model="form.repasswd" placeholder="请在此确认密码"></el-input>
+    <el-form-item prop="repasswd"  label="确认密码">
+      <el-input v-model="form.repasswd" type="password" placeholder="请在此确认密码"></el-input>
     </el-form-item>
 
-    <el-form-item pros="repasswd" label="">
+    <el-form-item prop="repasswd" label="">
       <!-- <button @click.prevent></button> -->
       <el-button type="primary" @click.native.prevent="handleRegister">注册</el-button>
     </el-form-item>
@@ -43,7 +43,7 @@ import md5 from 'md5'
     layout: 'login',
     methods: {
       handleRegister() {
-        this.refs.registerForm.validate(async valid=>{
+        this.$refs.registerForm.validate(async valid=>{
           if (valid) {
             console.log('校验成功');
             // TODO 发送请求
@@ -76,10 +76,10 @@ import md5 from 'md5'
     data() {
       return {
         form: {
-          email: '',
-          nickname:'',
-          passwd: '',
-          repasswd: '',
+          email: '384542246@qq.com',
+          nickname:'zxl',
+          passwd: 'asd12345',
+          repasswd: 'asd12345',
           captcha: ''
         },
         rules: {
