@@ -10,7 +10,7 @@ const createRule = {
 }
 
 class UserController extends BaseController {
-  // async login() {}
+  async login() {}
   async register() {
     const { ctx } = this
     try {
@@ -31,10 +31,10 @@ class UserController extends BaseController {
     // this.success({ name: 'zxl' })
   }
 
-  // async verify() {
-  //   // 校验用户名是否存在
-  // }
-  // async info() {}
+  async verify() {
+    // 校验用户名是否存在
+  }
+  async info() {}
 }
 
 module.exports = UserController
