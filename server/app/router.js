@@ -10,8 +10,8 @@ module.exports = app => {
   // 验证码
   router.get('/captcha', controller.util.captcha)
 
-  router.group({name:'user', prefix:'/user'},router=>{
-    const { info, register, login, verify} = controller.user
+  router.group({ name: 'user', prefix: '/user' }, router => {
+    const { info, register, login, verify } = controller.user
     router.post('/register', register)
     router.post('/info', info)
     router.get('/login', login)
