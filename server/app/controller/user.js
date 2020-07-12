@@ -10,7 +10,7 @@ const createRule = {
 }
 
 class UserController extends BaseController {
-  async login() {}
+  // async login() {}
   async register() {
     const { ctx } = this
     try {
