@@ -13,17 +13,19 @@
   "devDependencies": {
     "autod": "^3.0.1",
     "autod-egg": "^1.1.0",
+    "cz-conventional-changelog": "^3.2.0",
     "egg-bin": "^4.11.0",
     "egg-ci": "^1.11.0",
     "egg-mock": "^3.21.0",
     "eslint": "^5.13.0",
-    "eslint-config-egg": "^7.1.0"
+    "eslint-config-egg": "^7.1.0",
+    "husky": "^4.2.5"
   },
   "engines": {
     "node": ">=10.0.0"
   },
   "husky": {
-    "hooks":{
+    "hooks": {
       "pre-commit": "npm run test"
     }
   },
@@ -47,5 +49,10 @@
     "url": ""
   },
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
 }
