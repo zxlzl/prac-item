@@ -1,3 +1,5 @@
+'use strict'
+
 module.exports = app => {
   const mongoose = app.mongoose
   const Schema = mongoose.Schema
@@ -6,21 +8,21 @@ module.exports = app => {
     // __v:
     email: {
       type: String,
-      required: true
+      required: true,
     },
-    passwd:{
+    passwd: {
       type: String,
-      required: true
+      required: true,
     },
-    nickname:{
+    nickname: {
       type: String,
-      required: true
+      required: true,
     },
-    avatar:{
+    avatar: {
       type: String,
       required: false,
-      default: "/user.png"
+      default: '/user.png',
     },
-  },{timestamps: true})
-  return mongoose.model('User',UserSchema)
+  }, { timestamps: true })
+  return mongoose.model('User', UserSchema)
 }
