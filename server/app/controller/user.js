@@ -15,9 +15,12 @@ class UserController extends BaseController {
   async login() {
     const { ctx } = this
     const { app } = ctx
-    const { email, passwd, captcha } = ctx.request.body
+    const { email, passwd, captcha,emailcode } = ctx.request.body
     if (captcha.toUpperCase() !== ctx.session.captcha.toUpperCase()) {
       return this.error('验证码错误')
+    }
+    if (emailcode !== ctx.session.emailcode) {
+      return this.error('邮箱验证码错误')
     }
     const user = await ctx.model.User.findOne({
       email,
@@ -34,7 +37,7 @@ class UserController extends BaseController {
       },
       app.config.jwt.secret,
       {
-        expiresIn: '1h',
+        expiresIn: '1H',
       }
     )
     this.success({ token, email, nickname: user.nickname })
@@ -75,10 +78,18 @@ class UserController extends BaseController {
     return user
   }
 
-  // async verify() {
-  //   // 校验用户名是否存在
-  // }
-  // async info() {}
+  async verify() {
+    // 校验用户名是否存在
+  }
+  async info() {
+    const {ctx} = this
+    // 还不知道是哪个邮件 从token读取
+    // 有的接口从token中读取数据 有的不需要
+    const {email} = ctx.state
+    const user = await this.checkEmail(email)
+    console.log(user);
+    this.success(user)
+  }
 }
 
 module.exports = UserController
