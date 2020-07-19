@@ -5,9 +5,9 @@ module.exports = app => {
   const Schema = mongoose.Schema
 
   const UserSchema = new Schema({
-    __v:{
+    __v: {
       type: Number,
-      select: false
+      select: false,
     },
     email: {
       type: String,
@@ -16,7 +16,7 @@ module.exports = app => {
     passwd: {
       type: String,
       required: true,
-      select: false
+      select: false,
     },
     nickname: {
       type: String,

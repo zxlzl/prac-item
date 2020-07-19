@@ -15,7 +15,7 @@ class UserController extends BaseController {
   async login() {
     const { ctx } = this
     const { app } = ctx
-    const { email, passwd, captcha,emailcode } = ctx.request.body
+    const { email, passwd, captcha, emailcode } = ctx.request.body
     if (captcha.toUpperCase() !== ctx.session.captcha.toUpperCase()) {
       return this.error('验证码错误')
     }
@@ -82,12 +82,12 @@ class UserController extends BaseController {
     // 校验用户名是否存在
   }
   async info() {
-    const {ctx} = this
+    const { ctx } = this
     // 还不知道是哪个邮件 从token读取
     // 有的接口从token中读取数据 有的不需要
-    const {email} = ctx.state
+    const { email } = ctx.state
     const user = await this.checkEmail(email)
-    console.log(user);
+    console.log(user)
     this.success(user)
   }
 }

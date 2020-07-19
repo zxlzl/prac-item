@@ -1,33 +1,33 @@
 'use strict'
 
-const {Service} = require('egg')
+const { Service } = require('egg')
 
 const nodemailer = require('nodemailer')
 
 const userEmail = 'MMIRAY@126.com'
-let transporter = nodemailer.createTransport({
-  service: "126",
+const transporter = nodemailer.createTransport({
+  service: '126',
   secureConnection: true,
   auth: {
     user: userEmail,
-    pass: 'NQWDILYCUWHBUCXG'
-  }
+    pass: 'NQWDILYCUWHBUCXG',
+  },
 })
 class ToolService extends Service {
-  async send(email,subject,text,html){
+  async send(email, subject, text, html) {
     const mailOptions = {
       from: userEmail,
-      cc:userEmail,
+      cc: userEmail,
       to: email,
       subject,
       text,
-      html
+      html,
     }
     try {
       await transporter.sendMail(mailOptions)
       return true
     } catch (error) {
-      console.log('email error:',error)
+      console.log('email error:', error)
       return false
     }
   }
