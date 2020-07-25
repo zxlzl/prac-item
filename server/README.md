@@ -12,3 +12,12 @@ code 0 成功 其他都是失败
      -666 登陆状态过期
 
 
+
+
+"husky": {
+    "hooks": {
+      "pre-commit": "npm run test"
+    }
+  },
+
+
