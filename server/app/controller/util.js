@@ -43,7 +43,6 @@ class UtilController extends BaseController {
   async uploadfile() {
     const { ctx } = this;
     const file = ctx.request.files[0];
-    console.log(file);
     // const targetDir = path.resolve()
     await fse.move(file.filepath, this.config.UPLOAD_DIR + "/" + file.filename);
 

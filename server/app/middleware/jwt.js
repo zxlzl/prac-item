@@ -21,7 +21,7 @@ module.exports = ({ app }) => {
     } catch (error) {
       if (error.name === 'TokenExpiredError') {
         ctx.body = {
-          code: -1,
+          code: -666,
           message: '过期了',
         }
       } else {
