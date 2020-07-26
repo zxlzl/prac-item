@@ -258,8 +258,7 @@ export default {
         const name = hash + "-" + index;
         return { hash, name, index, chunk: chunk.file };
       });
-      // await this.uploadChunks();
-
+      await this.uploadChunks();
       return;
       const form = new FormData();
       form.append("name", "file");
@@ -284,7 +283,7 @@ export default {
           return form;
         })
         .map((form, index) =>
-          this.$http.post("/uploadfile", {
+          this.$http.post("/uploadfile",form, {
             onUploadProgress: (progress) => {
               // 不是整体的进度条 而是每个区块有自己的进度条 整体的需要计算
               this.chunks[index].progress = Number(
@@ -309,10 +308,11 @@ export default {
   vertical-align: middle;
 .cube-container 
   .cube
-    width 14px
-    height 14px
+    width 16px
+    height 16px
     line-height 12px
     border 1px black solid 
+    box-sizing border-box
     background #eeeeee
     float left 
     >.success
