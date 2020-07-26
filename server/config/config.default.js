@@ -20,6 +20,7 @@ module.exports = appInfo => {
   config.multipart = {
     mode: 'file',
     whiteList: () => true,
+    fileExtensions: ['']
   }
 
   config.UPLOAD_DIR = path.resolve(__dirname, '..', 'app/public')

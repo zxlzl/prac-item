@@ -6,7 +6,7 @@
     </div>
 
     <div>
-      <!-- <el-progress :stroke-width="20" :text-inside="true" :percentage="uploadProgress"></el-progress> -->
+      <el-progress :stroke-width="20" :text-inside="true" :percentage="uploadProgress"></el-progress>
     </div>
     <div>
       <el-button @click="uploadFile">上传</el-button>
@@ -21,7 +21,7 @@
       如果progress = -1 或者 <0 报错 显示红色
       == 100 成功
       别的数字 方块高度显示-->
-      尽可能让方块看起来是正方体
+      <!-- 尽可能让方块看起来是正方体 -->
       <!-- 比如10个方块 4*4 9个 3*3 -->
       <div class="cube-container" :style="{width:cubeWidth+'px'}">
         <div class="cube" v-for="chunk in chunks" :key="chunk.name">
@@ -31,6 +31,7 @@
             'success':chunk.progress==100,
             'error':chunk.progress<0,
           }"
+          :style="{height:chunks.progress+'%'}"
           >
             <i
               class="el-icon-loading"
@@ -252,38 +253,27 @@ export default {
       // console.log("文件hash", hash);
       // console.log("文件hash1", hash1);
       console.log("文件has2 simple hash", hash);
-
       this.chunks = chunks.map((chunk, index) => {
         // 切片名字 hash index
         const name = hash + "-" + index;
-        return { hash, name, index, chunk: chunk.file };
+        return { hash, name, index, chunk: chunk.file,size: chunk.index };
       });
       await this.uploadChunks();
-      return;
-      const form = new FormData();
-      form.append("name", "file");
-      form.append("file", this.file);
-      const ret = this.$http.post("/uploadfile", form, {
-        onUploadProgress: (progress) => {
-          this.uploadProgress = Number(
-            (progress.loaded / progress.total) * 100
-          ).toFixed(2);
-        },
-      });
     },
     async uploadChunks() {
       const request = this.chunks
-        .map((item, index) => {
+        .map((item, i) => {
           const form = new FormData();
-          const { chunk, hash, name } = item;
+          const { chunk, hash, name,size } = item;
           form.append("chunk", chunk);
           form.append("hash", hash);
           form.append("name", name);
+          form.append("size", size);
           // form.append('index',chunk.index)
           return form;
         })
         .map((form, index) =>
-          this.$http.post("/uploadfile",form, {
+          this.$http.post("/uploadfile1",form, {
             onUploadProgress: (progress) => {
               // 不是整体的进度条 而是每个区块有自己的进度条 整体的需要计算
               this.chunks[index].progress = Number(
@@ -294,6 +284,18 @@ export default {
         );
       // @todo 并发量控制
       await Promise.all(request);
+
+      // const form = new FormData();
+      // form.append("name", "file");
+      // form.append("file", this.file);
+      // console.log(this.file);
+      // const ret = this.$http.post("/uploadfile", form, {
+      //   onUploadProgress: (progress) => {
+      //     this.uploadProgress = Number(
+      //       (progress.loaded / progress.total) * 100
+      //     ).toFixed(2);
+      //   },
+      // });
     },
   },
 };
