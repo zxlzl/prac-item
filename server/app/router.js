@@ -14,14 +14,13 @@ module.exports = app => {
 
   router.post('/uploadfile', controller.util.uploadfile)
   router.post('/uploadfile1', controller.util.uploadfile1)
-  router.post('/mergefile', controller.util.uploadfile1)
+  router.post('/mergefile', controller.util.mergefile)
 
   router.group({ name: 'user', prefix: '/user' }, router => {
     const { info, register, login, verify } = controller.user
     router.post('/register', register)
     router.post('/login', login)
     router.post('/verify', verify)
-
     router.get('/info', jwt, info)
   })
 

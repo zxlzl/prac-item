@@ -66,6 +66,14 @@ class UtilController extends BaseController {
     await fse.move(file.filepath, `${chunkPath}/${name}`);
     this.message('切片上传成功')
   }
+  async mergefile(){
+    const {ext,size,hash} = this.ctx.request.body
+    const filePath = path.resolve(this.config.UPLOAD_DIR,`${hash}.${ext}`)
+    await this.ctx.service.tools.mergeFile(filePath,hash,size)
+    this.success({
+      url: `/public/${hash}.${ext}`
+    })
+  }
 }
 
 

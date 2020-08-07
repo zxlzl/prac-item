@@ -175,7 +175,6 @@ export default {
       return new Promise((resolve) => {
         const spark = new sparkMD5.ArrayBuffer();
         let count = 0;
-
         const appendToSpark = async (file) => {
           return new Promise((resolve) => {
             const reader = new FileReader();
@@ -307,7 +306,7 @@ export default {
       // });
     },
     async mergeRequest(){
-      this.$http.post('merge',{
+      this.$http.post('mergefile',{
         ext: this.file.name.split('.').pop(),
         size: CHUNK_SIZE,
         hash: this.hash
