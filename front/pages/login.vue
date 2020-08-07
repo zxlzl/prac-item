@@ -58,7 +58,7 @@ export default {
             captcha: this.form.captcha,
             emailcode: this.form.emailcode,
           };
-          console.log(obj);
+          console.log(obj)
           let ret = await this.$http.post("/user/login", obj);
           // code=0成功
           if (ret.code == 0) {

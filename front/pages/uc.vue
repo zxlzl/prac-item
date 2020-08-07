@@ -31,7 +31,7 @@
             'success':chunk.progress==100,
             'error':chunk.progress<0,
           }"
-          :style="{height:chunks.progress+'%'}"
+            :style="{height:chunk.progress+'%'}"
           >
             <i
               class="el-icon-loading"
@@ -73,8 +73,8 @@ export default {
       }
       const loaded = this.chunks
         .map((item) => item.chunk.size * item.progress)
-        .reduce((acc, cur) => acc + cur,0);
-      return parseInt((loaded / this.file.size)*100).toFixed(2);
+        .reduce((acc, cur) => acc + cur, 0);
+      return parseInt((loaded / this.file.size) * 100).toFixed(2);
     },
   },
   methods: {
@@ -256,15 +256,23 @@ export default {
       this.chunks = chunks.map((chunk, index) => {
         // 切片名字 hash index
         const name = hash + "-" + index;
-        return { hash, name, index, chunk: chunk.file,size: chunk.index };
+        return {
+          hash,
+          name,
+          index,
+          chunk: chunk.file,
+          size: chunk.index,
+          progress: 0,
+        };
       });
       await this.uploadChunks();
     },
     async uploadChunks() {
+      console.log(this.chunks);
       const request = this.chunks
         .map((item, i) => {
           const form = new FormData();
-          const { chunk, hash, name,size } = item;
+          const { chunk, hash, name, size } = item;
           form.append("chunk", chunk);
           form.append("hash", hash);
           form.append("name", name);
@@ -273,7 +281,7 @@ export default {
           return form;
         })
         .map((form, index) =>
-          this.$http.post("/uploadfile1",form, {
+          this.$http.post("/uploadfile1", form, {
             onUploadProgress: (progress) => {
               // 不是整体的进度条 而是每个区块有自己的进度条 整体的需要计算
               this.chunks[index].progress = Number(
@@ -284,6 +292,7 @@ export default {
         );
       // @todo 并发量控制
       await Promise.all(request);
+      await this.mergeRequest()
 
       // const form = new FormData();
       // form.append("name", "file");
@@ -297,31 +306,47 @@ export default {
       //   },
       // });
     },
+    async mergeRequest(){
+      this.$http.post('merge',{
+        ext: this.file.name.split('.').pop(),
+        size: CHUNK_SIZE,
+        hash: this.hash
+      })
+    }
   },
 };
 </script>
 
 <style lang="stylus" scoped>
-#drag 
+#drag {
   height: 100px;
   border: 2px dashed green;
   text-align: center;
   line-height: 100px;
   vertical-align: middle;
-.cube-container 
-  .cube
-    width 16px
-    height 16px
-    line-height 12px
-    border 1px black solid 
-    box-sizing border-box
-    background #eeeeee
-    float left 
-    >.success
-      background green
-    >.uploading
-      background blue
-    >.error
-      background red
+}
 
+.cube-container {
+  .cube {
+    width: 16px;
+    height: 16px;
+    line-height: 12px;
+    border: 1px black solid;
+    box-sizing: border-box;
+    background: #eeeeee;
+    float: left;
+
+    >.success {
+      background: green;
+    }
+
+    >.uploading {
+      background: blue;
+    }
+
+    >.error {
+      background: red;
+    }
+  }
+}
 </style>
