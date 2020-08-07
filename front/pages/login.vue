@@ -23,12 +23,12 @@
           <el-input v-model="form.captcha" placeholder="请输入验证码"></el-input>
         </el-form-item>
 
-        <el-form-item prop="emailcode" label="验证码" class="captcha-container">
+        <!-- <el-form-item prop="emailcode" label="验证码" class="captcha-container">
           <div class="captcha">
             <el-button :disabled="!!send.timer" @click="sendEmailCode" type="primary" >{{sendText}}</el-button>
           </div>
           <el-input v-model="form.emailcode" placeholder="请输入验证码"></el-input>
-        </el-form-item>
+        </el-form-item> -->
 
         <el-form-item prop="passwd" label="密码">
           <el-input v-model="form.passwd" type="password"  placeholder="请输入密码"></el-input>

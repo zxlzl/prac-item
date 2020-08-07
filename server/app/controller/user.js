@@ -19,9 +19,9 @@ class UserController extends BaseController {
     if (captcha.toUpperCase() !== ctx.session.captcha.toUpperCase()) {
       return this.error('验证码错误')
     }
-    if (emailcode !== ctx.session.emailcode) {
-      return this.error('邮箱验证码错误')
-    }
+    // if (emailcode !== ctx.session.emailcode) {
+    //   return this.error('邮箱验证码错误')
+    // }
     const user = await ctx.model.User.findOne({
       email,
       passwd: md5(passwd + HashSalt),
