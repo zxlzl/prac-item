@@ -23,12 +23,13 @@ class ToolService extends Service {
     let chunks = await fse.readdir(chunkDir)
     chunks.sort((a,b)=>a.split('-')[1]-b.split('-')[1])
     chunks = chunks.map(cp=>path.resolve(chunkDir,cp))
-    this.mergeChunks(chunks,filePath,size)
+    await this.mergeChunks(chunks,filePath,size)
   }
   async mergeChunks(filesPath,dest,size){
     const pipeStream = (filePath,WriteStream)=>new Promise((resolve)=>{
       const readStream = fse.createReadStream(filePath)
       readStream.on('end',()=>{
+        console.log(filePath);
         fse.unlinkSync(filePath)
         resolve()
       })

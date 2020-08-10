@@ -49,7 +49,7 @@
 import sparkMD5 from "spark-md5";
 import { resolve } from "url";
 
-const CHUNK_SIZE = 0.1 * 1024 * 1024;
+const CHUNK_SIZE = 1 * 1024 * 1024;
 export default {
   async mounted() {
     const ret = await this.$http.get("/user/info");
@@ -155,6 +155,7 @@ export default {
         chunks.push({ index: cur, file: file.slice(cur, cur + size) });
         cur += size;
       }
+      console.log(chunks);
       return chunks;
     },
     async calculateHashWorker() {
@@ -249,6 +250,17 @@ export default {
       // const hash1 = await this.calculateHashIdle();
       const hash = await this.calculateHashSimple();
       this.hash = hash;
+
+      // 问一下后端 文件是否上传过 如果没有 是否有存在的切片
+      const {data:{uploaded, uploadedList}} = await this.$http.post('/checkfile',{
+        hash: this.hash,
+        ext: this.file.name.split('.').pop()
+      })
+
+      if (uploaded) {
+        // 秒传
+        return this.$message.success('秒传成功')
+      }
       // console.log("文件hash", hash);
       // console.log("文件hash1", hash1);
       console.log("文件has2 simple hash", hash);
