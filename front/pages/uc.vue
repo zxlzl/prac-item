@@ -49,7 +49,7 @@
 import sparkMD5 from "spark-md5";
 import { resolve } from "url";
 
-const CHUNK_SIZE = 1 * 1024 * 1024;
+const CHUNK_SIZE = .5 * 1024 * 1024;
 export default {
   async mounted() {
     const ret = await this.$http.get("/user/info");
@@ -273,14 +273,15 @@ export default {
           index,
           chunk: chunk.file,
           size: chunk.index,
-          progress: 0,
+          // 设置进度条，已经上传的 设为100
+          progress: uploadedList.indexOf(name)>=-1?100:0,
         };
       });
-      await this.uploadChunks();
+      await this.uploadChunks(uploadedList);
     },
-    async uploadChunks() {
-      console.log(this.chunks);
+    async uploadChunks(uploadedList=[]) {
       const request = this.chunks
+        .filter(chunk=>uploadedList.indexOf(chunk.name)===-1)
         .map((item, i) => {
           const form = new FormData();
           const { chunk, hash, name, size } = item;
