@@ -13,7 +13,6 @@ module.exports = app => {
   router.get('/sendcode', controller.util.sendcode)
 
   router.post('/uploadfile', controller.util.uploadfile)
-  router.post('/uploadfile1', controller.util.uploadfile1)
   router.post('/mergefile', controller.util.mergefile)
   router.post('/checkfile', controller.util.checkfile)
 

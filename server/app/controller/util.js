@@ -63,17 +63,21 @@ class UtilController extends BaseController {
   }
 
   // 上传文件
+  // async uploadfile() {
+  //   // pubic/hash/(hash+index)
+  //   const { ctx } = this;
+  //   const file = ctx.request.files[0];
+  //   const {name} = ctx.request.body
+
+  //   await fse.move(file.filepath, this.config.UPLOAD_DIR + "/" + file.filename);
+
+  //   this.success({ url: `/public/${file.filename}` });
+  // }
   async uploadfile() {
-    // pubic/hash/(hash+index)
-    const { ctx } = this;
-    const file = ctx.request.files[0];
-    const {name} = ctx.request.body
-
-    await fse.move(file.filepath, this.config.UPLOAD_DIR + "/" + file.filename);
-
-    this.success({ url: `/public/${file.filename}` });
-  }
-  async uploadfile1() {
+    
+    if (Math.random()>0.5) {
+      return this.ctx.status = 500
+    }
     // pubic/hash/(hash+index)
     const { ctx } = this;
     const file = ctx.request.files[0];

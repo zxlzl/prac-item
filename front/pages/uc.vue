@@ -1,6 +1,7 @@
 <template>
   <div>
     <h1>用户中心</h1>
+    <i class="el-icon-loading"></i>
     <div ref="drag" id="drag">
       <input type="file" name="file" @change="handleFileChange" />
     </div>
@@ -48,8 +49,10 @@
 <script>
 import sparkMD5 from "spark-md5";
 import { resolve } from "url";
+import { rejects } from 'assert';
 
-const CHUNK_SIZE = .5 * 1024 * 1024;
+// size的确定可以通过tcp慢启动 先上传一个初始区块，比如10kb 根据上传成功时间 决定下一个区块是20k 还是50k
+const CHUNK_SIZE = 0.5 * 1024 * 1024;
 export default {
   async mounted() {
     const ret = await this.$http.get("/user/info");
@@ -239,6 +242,10 @@ export default {
       });
     },
     async uploadFile() {
+      if (!this.file) {
+        return;
+      }
+
       // if (!await this.isImage(this.file)) {
       //   console.log('文件格式不对')
       //   return
@@ -252,14 +259,16 @@ export default {
       this.hash = hash;
 
       // 问一下后端 文件是否上传过 如果没有 是否有存在的切片
-      const {data:{uploaded, uploadedList}} = await this.$http.post('/checkfile',{
+      const {
+        data: { uploaded, uploadedList },
+      } = await this.$http.post("/checkfile", {
         hash: this.hash,
-        ext: this.file.name.split('.').pop()
-      })
+        ext: this.file.name.split(".").pop(),
+      });
 
       if (uploaded) {
         // 秒传
-        return this.$message.success('秒传成功')
+        return this.$message.success("秒传成功");
       }
       // console.log("文件hash", hash);
       // console.log("文件hash1", hash1);
@@ -274,37 +283,40 @@ export default {
           chunk: chunk.file,
           size: chunk.index,
           // 设置进度条，已经上传的 设为100
-          progress: uploadedList.indexOf(name)>=-1?100:0,
+          progress:uploadedList.indexOf(name)>-1 ?100:0
         };
       });
       await this.uploadChunks(uploadedList);
     },
-    async uploadChunks(uploadedList=[]) {
+    async uploadChunks(uploadedList = []) {
       const request = this.chunks
-        .filter(chunk=>uploadedList.indexOf(chunk.name)===-1)
+        .filter((chunk) => uploadedList.indexOf(chunk.name) === -1)
         .map((item, i) => {
           const form = new FormData();
-          const { chunk, hash, name, size } = item;
+          const { chunk, hash, name, size, index } = item;
           form.append("chunk", chunk);
           form.append("hash", hash);
           form.append("name", name);
           form.append("size", size);
           // form.append('index',chunk.index)
-          return form;
-        })
-        .map((form, index) =>
-          this.$http.post("/uploadfile1", form, {
-            onUploadProgress: (progress) => {
-              // 不是整体的进度条 而是每个区块有自己的进度条 整体的需要计算
-              this.chunks[index].progress = Number(
-                (progress.loaded / progress.total) * 100
-              ).toFixed(2);
-            },
-          })
-        );
+          return { form, index,error:0 };
+        });
+      // .map((form, index) =>
+      //   this.$http.post("/uploadfile1", form, {
+      //     onUploadProgress: (progress) => {
+      //       // 不是整体的进度条 而是每个区块有自己的进度条 整体的需要计算
+      //       this.chunks[index].progress = Number(
+      //         (progress.loaded / progress.total) * 100
+      //       ).toFixed(2);
+      //     },
+      //   })
+      // );
       // @todo 并发量控制
-      await Promise.all(request);
-      await this.mergeRequest()
+      // 尝试申请tcp链接过多也会造成卡顿
+      // 异步的并发数控制
+      // await Promise.all(request);
+      await this.sendRequest(request);
+      await this.mergeRequest();
 
       // const form = new FormData();
       // form.append("name", "file");
@@ -318,13 +330,73 @@ export default {
       //   },
       // });
     },
-    async mergeRequest(){
-      this.$http.post('mergefile',{
-        ext: this.file.name.split('.').pop(),
+
+
+    
+    // 上传可能报错 报错之后 进度条变红 开始重试 重试失败三次后整体全部停止
+    async sendRequest(chunks, limit = 4) {
+      // limits并发数量
+      // 一个数组 长度是limit
+      // [task1,task2,task3]
+      return new Promise((resolve, reject) => {
+        const len = chunks.length;
+        // 已完成任务的累加
+        let counter = 0;
+        let isStop = false
+
+        const start = async () => {
+          if (isStop) {
+            return 
+          }
+          const task = chunks.shift();
+          if (task) {
+            const { form, index } = task;
+            try {
+              await this.$http.post("/uploadfile", form, {
+                onUploadProgress: (progress) => {
+                  // 不是整体的进度条 而是每个区块有自己的进度条 整体的需要计算
+                  this.chunks[index].progress = Number(
+                    ((progress.loaded / progress.total) * 100).toFixed(2)
+                  );
+                },
+              });
+              if (counter == len - 1) {
+                resolve();
+              } else {
+                counter++;
+                // 启动下一个任务
+                start();
+              }
+            } catch (error) {
+              this.chunks[index].progress = -1
+              if (task.error < 3) {
+                task.error++
+                chunks.unshift(task)
+                start()
+              } else {
+                // 错误三次
+                isStop = true
+                reject()
+              }
+            }
+          }
+        };
+        while (limit > 0) {
+          // 启动limit个任务
+          setTimeout(() => {
+            start();
+          }, Math.random * 2000);
+          limit -= 1;
+        }
+      });
+    },
+    async mergeRequest() {
+      this.$http.post("mergefile", {
+        ext: this.file.name.split(".").pop(),
         size: CHUNK_SIZE,
-        hash: this.hash
-      })
-    }
+        hash: this.hash,
+      });
+    },
   },
 };
 </script>
