@@ -17,15 +17,21 @@
 
 <script>
 import marked from "marked";
+import hijs from "highlight.js"
+import javascript from 'highlight.js/lib/languages/javascript'
+import 'highlight.js/styles/monokai-sublime.css'
 export default {
   data() {
     return {
       content: `# 每天最重要事
-        * 和妞妞玩
-        * 上课
-        * 吃饭
-        * 睡觉
-        * 学习
+* 和妞妞玩
+* 上课
+* 吃饭
+* 睡觉
+* 学习
+\`\`\`javascript
+console.log(123)
+\`\`\`
         `,
     };
   },
@@ -37,6 +43,8 @@ export default {
   mounted() {
     this.timer = null;
     this.bindEvents();
+
+    marked.setOpion
   },
   methods: {
     bindEvents() {
