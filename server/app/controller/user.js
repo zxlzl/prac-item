@@ -89,6 +89,13 @@ class UserController extends BaseController {
     const user = await this.checkEmail(email)
     this.success(user)
   }
+
+
+  async articleStatus(){
+    const {ctx} = this
+    const me = await ctx.model.User.findById(ctx.state.userid)
+    console.log(me);
+  }
 }
 
 module.exports = UserController

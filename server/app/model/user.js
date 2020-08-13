@@ -27,6 +27,7 @@ module.exports = app => {
       required: false,
       default: '/user.png',
     },
+    
   }, { timestamps: true })
   return mongoose.model('User', UserSchema)
 }
