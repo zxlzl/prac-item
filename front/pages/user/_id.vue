@@ -1,5 +1,5 @@
 <template>
-  <div class="kkb-container">
+  <div class="zxl-container">
     <h1>用户中心</h1>
     <el-tabs v-model="activeName">
       <el-tab-pane :label='"关注"+following.length' name="following">

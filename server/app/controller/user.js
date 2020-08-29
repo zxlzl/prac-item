@@ -90,12 +90,86 @@ class UserController extends BaseController {
     this.success(user)
   }
 
+  async follow() {
+    const { ctx } = this;
+
+    const me = await ctx.model.User.findById(ctx.state.userid);
+    const isFollow = !!me.following.find(
+      (id) => id.toString() === ctx.params.id
+    );
+    if (!isFollow) {
+      me.following.push(ctx.params.id);
+      me.save();
+      this.message("关注成功");
+    }
+  }
+
+  async cancelFollow() {
+    const { ctx } = this;
+    const me = await ctx.model.User.findById(ctx.state.userid);
+    // 把用户从我的following数组中删掉
+    const index = me.following
+      .map((id) => id.toString())
+      .indexOf(ctx.params.id);
+    if (index > -1) {
+      me.following.splice(index, 1);
+      me.save();
+      this.message("取消成功");
+    }
+    // let isFollow = !!me.following.find(id=> id.toString()===ctx.params.id)
+    // if(!isFollow){
+    //   me.following.push(ctx.params.id)
+    //   me.save()
+    //   this.message('关注成功')
+    // }
+  }
+
+  async isfollow() {
+    const { ctx } = this;
+    const me = await ctx.model.User.findById(ctx.state.userid);
+    // 我的follow字段里，有没有传来的这个用户id
+    const isFollow = !!me.following.find(
+      (id) => id.toString() === ctx.params.id
+    );
+    this.success({ isFollow });
+  }
+
 
   async articleStatus(){
     const {ctx} = this
     const me = await ctx.model.User.findById(ctx.state.userid)
     console.log(me);
   }
+
+  async likeArticle() {
+    const { ctx } = this;
+    const me = await ctx.model.User.findById(ctx.state.userid);
+    if (!me.likeArticle.find((id) => id.toString() === ctx.params.id)) {
+      me.likeArticle.push(ctx.params.id);
+      me.save();
+      await ctx.model.Article.findByIdAndUpdate(ctx.params.id, {
+        $inc: { like: 1 },
+      });
+      return this.message("点赞成功");
+    }
+  }
+
+  async cancelLikeArticle() {
+    const { ctx } = this;
+    const me = await ctx.model.User.findById(ctx.state.userid);
+    const index = me.likeArticle
+      .map((id) => id.toString())
+      .indexOf(ctx.params.id);
+    if (index > -1) {
+      me.likeArticle.splice(index, 1);
+      me.save();
+      await ctx.model.Article.findByIdAndUpdate(ctx.params.id, {
+        $inc: { like: -1 },
+      });
+      return this.message("取消点赞成功");
+    }
+  }
+
 }
 
 module.exports = UserController
