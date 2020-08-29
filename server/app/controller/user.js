@@ -134,6 +134,20 @@ class UserController extends BaseController {
     this.success({ isFollow });
   }
 
+  async following() {
+    const { ctx } = this;
+    const users = await ctx.model.User.findById(ctx.params.id).populate(
+      "following"
+    );
+    this.success(users.following);
+  }
+  
+  async followers() {
+    const { ctx } = this;
+    const users = await ctx.model.User.find({ following: ctx.params.id });
+    this.success(users);
+  }
+
 
   async articleStatus() {
     const { ctx } = this;
