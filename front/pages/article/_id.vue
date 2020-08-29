@@ -62,12 +62,13 @@ export default {
       let type= this.likeStatus ?'delete':'put'
 
       let ret = await this.$http[type]('/user/likeArticle/'+this.id)
+      console.log(ret);
       if(ret.code==0){
         // 取巧，简单粗暴
         this.getArticle()
         // this.getLikeStatus()
         this.$notify({
-          title:ret.message,
+          title:ret.msg,
           type:'success'
         })
       }

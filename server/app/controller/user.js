@@ -135,10 +135,18 @@ class UserController extends BaseController {
   }
 
 
-  async articleStatus(){
-    const {ctx} = this
-    const me = await ctx.model.User.findById(ctx.state.userid)
+  async articleStatus() {
+    const { ctx } = this;
+    const me = await ctx.model.User.findById(ctx.state.userid);
     console.log(me);
+    const like = !!me.likeArticle.find((id) => id.toString() === ctx.params.id);
+    const dislike = !!me.disLikeArticle.find(
+      (id) => id.toString() === ctx.params.id
+    );
+    this.success({
+      like,
+      dislike,
+    });
   }
 
   async likeArticle() {
