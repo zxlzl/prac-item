@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="zxl-container">
     <VirtualList :listData="articles" :estimatedItemSize="300"  v-slot="slotProps">
       <div>pp</div>
     </VirtualList>
@@ -14,17 +14,17 @@ export default {
   components: {
     VirtualList,
   },
-  data() {
+  data(){
     return {
-      articles: [],
-    };
-  },
-  async mounted() {
-    let ret = await this.$http.get("/article");
-    if (ret.code == 0) {
-      this.articles = ret.data;
+      articles:[]
     }
   },
+  async mounted(){
+    let ret = await this.$http.get('/article')
+    if(ret.code==0){
+      this.articles = ret.data
+    }
+  }
 };
 </script>
 
@@ -39,8 +39,8 @@ export default {
 }
 
 .title {
-  font-family: "Quicksand", "Source Sans Pro", -apple-system, BlinkMacSystemFont,
-    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
+    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   display: block;
   font-weight: 300;
   font-size: 100px;
@@ -59,11 +59,11 @@ export default {
 .links {
   padding-top: 15px;
 }
-html {
+html{
   height: 100%;
 }
-body {
+body{
   height: 100%;
-  margin: 0;
+  margin:0;
 }
 </style>

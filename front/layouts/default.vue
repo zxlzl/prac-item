@@ -34,7 +34,7 @@
         </el-menu-item>
       </el-menu>
     </el-header>
-    <el-mail><nuxt /></el-mail>
+    <el-main><nuxt /></el-main>
 
 
     <el-footer>底部信息</el-footer>
@@ -94,7 +94,7 @@ html {
 a{
   text-decoration: none;
 }
-.kkb-container{
+.zxl-container{
   width:980px;
   height:80vh;
   margin:0 auto;
