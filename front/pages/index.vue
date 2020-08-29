@@ -1,6 +1,6 @@
 <template>
   <div class="zxl-container">
-    <VirtualList :listData="articles" :estimatedItemSize="300"  v-slot="slotProps">
+    <VirtualList :listData="articles" :estimatedItemSize="300">
       <div>pp</div>
     </VirtualList>
   </div>
