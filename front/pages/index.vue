@@ -1,11 +1,14 @@
 <template>
   <div class="container">
-    <VirtualList :listData="articles" :size=300></VirtualList>
+    <VirtualList :listData="articles" :estimatedItemSize="300"  v-slot="slotProps">
+      <div>pp</div>
+    </VirtualList>
   </div>
 </template>
 
 <script>
 import VirtualList from "~/components/VirtualList.vue";
+import Logo from '~/components/Logo.vue'
 
 export default {
   components: {
@@ -13,13 +16,13 @@ export default {
   },
   data() {
     return {
-      articles:[]
-    }
+      articles: [],
+    };
   },
-  async mounted () {
-    let ret = await this.$http.get('/article');
-    if (ret.code ==0) {
-      this.articles = ret.data
+  async mounted() {
+    let ret = await this.$http.get("/article");
+    if (ret.code == 0) {
+      this.articles = ret.data;
     }
   },
 };
@@ -55,5 +58,12 @@ export default {
 
 .links {
   padding-top: 15px;
+}
+html {
+  height: 100%;
+}
+body {
+  height: 100%;
+  margin: 0;
 }
 </style>

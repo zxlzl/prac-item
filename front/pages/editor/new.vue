@@ -27,7 +27,6 @@ import marked from "marked";
 import hijs from "highlight.js";
 import javascript from "highlight.js/lib/languages/javascript";
 import "highlight.js/styles/monokai-sublime.css";
-import article from "../../../project-demo-master/server/app/model/article";
 export default {
   data() {
     return {
@@ -84,7 +83,6 @@ console.log(123)
     async submit() {
       // user-> article 一对多
       // 文章列表点赞 关注 草稿
-      
       let ret = await this.$http.post("/article/create", {
         content: this.content,
         compiledContent: this.compiledContent,
