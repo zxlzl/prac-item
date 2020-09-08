@@ -252,6 +252,7 @@ export default {
       // }else{
       //   console.log('格式正确');
       // }
+
       const chunks = this.createFileChunk(this.file);
       // const hash = await this.calculateHashWorker();
       // const hash1 = await this.calculateHashIdle();
@@ -390,6 +391,7 @@ export default {
         }
       });
     },
+    
     async mergeRequest() {
       this.$http.post("mergefile", {
         ext: this.file.name.split(".").pop(),
